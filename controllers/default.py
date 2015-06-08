@@ -7,6 +7,16 @@
 ## - user is required for authentication and authorization
 ## - download is for downloading files uploaded in the db (does streaming)
 #########################################################################
+if False:
+    from gluon import *
+    from gluon.tools import request,response, session, cache, Auth, DAL, Service, Crud, PluginManager
+    from gluon.contrib.appconfig import AppConfig
+    myconf = AppConfig(reload=True)
+    db = DAL(myconf.take('db.uri'), pool_size=myconf.take('db.pool_size', cast=int), check_reserved=['all'])
+    auth = Auth(db)
+    service = Service()
+    plugins = PluginManager()
+
 
 def index():
     """

@@ -10,6 +10,10 @@
 # request.requires_https()
 
 ## app configuration made easy. Look inside private/appconfig.ini
+if False:
+    from gluon import *
+    from gluon.tools import request,response, session, cache, DAL
+
 from gluon.contrib.appconfig import AppConfig
 ## once in production, remove reload=True to gain full speed
 myconf = AppConfig(reload=True)
@@ -90,3 +94,5 @@ auth.settings.reset_password_requires_verification = True
 
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
+
+
