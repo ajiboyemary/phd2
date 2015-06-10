@@ -22,6 +22,7 @@ myconf = AppConfig(reload=True)
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
     db = DAL(myconf.take('db.uri'), pool_size=myconf.take('db.pool_size', cast=int), check_reserved=['all'])
+    #db = DAL('sqlite://storage.sqlite',pool_size=1,check_reserved=['all'])
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
     db = DAL('google:datastore+ndb')
@@ -75,6 +76,15 @@ auth.settings.registration_requires_verification = False
 auth.settings.registration_requires_approval = False
 auth.settings.reset_password_requires_verification = True
 
+auth.settings.extra_fields['auth_user'] = [
+
+    Field('deviceuid'),
+    Field('bank_name'),
+    Field('bank_account'),
+    Field('phone_no',requires=IS_NOT_EMPTY()),
+    Field('refree'),
+    Field('refree_no')
+]
 #########################################################################
 ## Define your tables below (or better in another model file) for example
 ##

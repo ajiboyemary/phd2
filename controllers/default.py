@@ -13,6 +13,7 @@ if False:
     from gluon.contrib.appconfig import AppConfig
     myconf = AppConfig(reload=True)
     db = DAL(myconf.take('db.uri'), pool_size=myconf.take('db.pool_size', cast=int), check_reserved=['all'])
+    #db = DAL('sqlite://storage.sqlite',pool_size=1,check_reserved=['all'])
     auth = Auth(db)
     service = Service()
     plugins = PluginManager()
@@ -26,8 +27,12 @@ def index():
     if you need a simple wiki simply replace the two lines below with:
     return auth.wiki()
     """
-    response.flash = T("Hello World")
-    return dict(message=T('Welcome to web2py!'))
+
+
+    response.flash = "Hello World"
+
+
+    return dict(message='Welcome to web2py!')
 
 
 def user():

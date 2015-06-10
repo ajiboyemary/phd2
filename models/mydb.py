@@ -1,13 +1,14 @@
 __author__ = 'Naptin'
-from time import ctime
 if False:
     from gluon import *
 
     from datetime import date, datetime
+
     from gluon.tools import request,response, session, cache, DAL
     from gluon.tools import Auth, Service, PluginManager
     from gluon.contrib.appconfig import AppConfig
     myconf = AppConfig(reload=True)
+
     db = DAL(myconf.take('db.uri'), pool_size=myconf.take('db.pool_size', cast=int), check_reserved=['all'])
     auth = Auth(db)
     service = Service()
@@ -15,6 +16,7 @@ if False:
 
     ## create all tables needed by auth if not custom tables
     #auth.define_tables(username=False, signature=False)
+from time import ctime
 
 db.define_table('rev_wallet',
                 Field('revnumber', requires=IS_LENGTH(16, 16)),
@@ -23,8 +25,7 @@ db.define_table('rev_wallet',
                 Field('month_expired', 'integer', requires=IS_INT_IN_RANGE(1, 12)),
                 Field('year_expired', 'integer', requires=IS_INT_IN_RANGE(2015, 2099)),
                 Field('amount', 'float'),
-                #Field('owner', 'reference payer', default=None),
-                #format()
+
                 )
 db.define_table('device',
                 Field('name'),
@@ -38,18 +39,28 @@ db.define_table('payer',
                 Field('wallet', 'reference rev_wallet')
 
                 )
+
+db.define_table('receipt',
+                Field('serial_no'),
+                Field('date_gen', default=ctime()),
+                Field('date_exp','date'),
+                Field('ownby', 'reference auth_user'),
+                Field('status', requires=IS_IN_SET(['sold', 'loaded', 'expired']))
+                )
+
 db.define_table('rev_charged',
                 Field('wallet', 'reference rev_wallet'),
                 Field('device', 'reference device'),
                 Field('amount', 'float'),
-                Field('time_charged', default=ctime())
+                Field('time_charged', default=ctime()),
+                Field('receipt_issued', 'reference receipt')
                 )
 
 db.define_table('scratch_card',
-                Field('number', requires=IS_LENGTH(16, 8)),
+                Field('scratch_number', requires=IS_LENGTH(16, 8)),
                 Field('month_expired', 'integer', requires=IS_INT_IN_RANGE(1, 12)),
                 Field('year_expired', 'integer', requires=IS_INT_IN_RANGE(2015, 2099)),
-                Field('amount', 'float', requires=IS_FLOAT_IN_RANGE(0.0, 100000.0)),
+                Field('amount', 'float', requires=IS_FLOAT_IN_RANGE(100.0, 5000.0 )),
                 Field('status', requires=IS_IN_SET(['used', 'not-used']), default='not-used'),
                 Field('used_by_who', 'reference payer', default=None),
 
