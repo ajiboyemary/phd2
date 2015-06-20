@@ -10,13 +10,18 @@
 # request.requires_https()
 
 ## app configuration made easy. Look inside private/appconfig.ini
+
 if False:
     from gluon import *
     from gluon.tools import request,response, session, cache, DAL
+    from gluon.contrib.appconfig import AppConfig
+    myconf = AppConfig(reload=True)
+    #db = DAL(myconf.take('db.uri'), pool_size=myconf.take('db.pool_size', cast=int), check_reserved=['all'])
+    db = DAL('sqlite://storage.sqlite',pool_size=1,check_reserved=['all'])
 
-from gluon.contrib.appconfig import AppConfig
+#from gluon.contrib.appconfig import AppConfig
 ## once in production, remove reload=True to gain full speed
-myconf = AppConfig(reload=True)
+#myconf = AppConfig(reload=True)
 
 
 if not request.env.web2py_runtime_gae:
@@ -57,11 +62,12 @@ response.form_label_separator = myconf.take('forms.separator')
 #########################################################################
 
 from gluon.tools import Auth, Service, PluginManager
-
+db = DAL('sqlite://storage.sqlite',pool_size=1,check_reserved=['all'])
 auth = Auth(db)
 service = Service()
 plugins = PluginManager()
-
+import sys
+sys.path.append('c:\Python27\Lib\site-packages')
 ## create all tables needed by auth if not custom tables
 auth.define_tables(username=False, signature=False)
 
